@@ -24,6 +24,7 @@ public class UserAccount extends PanacheMongoEntity {
     private String username;
 
     @NotNull
+    @NotBlank
     @Email
     @Schema(description = "User's email address")
     private String email;

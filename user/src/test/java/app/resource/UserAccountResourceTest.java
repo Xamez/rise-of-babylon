@@ -121,6 +121,16 @@ public class UserAccountResourceTest {
                 .post("/api/users/signUp")
                 .then()
                 .statusCode(400);
+
+        UserDtos.UserSignup blankEmail = new UserDtos.UserSignup("validUser2", "", "pass");
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(blankEmail)
+                .when()
+                .post("/api/users/signUp")
+                .then()
+                .statusCode(400);
     }
 
     @Test
