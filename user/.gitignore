@@ -1,0 +1,15 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ
+.idea
+*.ipr
+*.iml
+*.iws
+
+# Local environment
+.env
+
+# Keys
+*.pem
