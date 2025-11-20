@@ -73,7 +73,7 @@ public class UserAccountService {
     }
 
     private UserDtos.TokenResponse generateToken(ObjectId id, String email, String username) {
-        var token = Jwt.issuer("sumerwars")
+        var token = Jwt.issuer("https://sumerwars.com")
                 .subject(id.toString())
                 .claim("email", email)
                 .claim("username", username)
