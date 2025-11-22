@@ -83,6 +83,10 @@ public class UserAccountService {
 
     @Transactional
     public void addGold(String userId, long amount) {
+        if (!ObjectId.isValid(userId)) {
+            throw new BadRequestException("Invalid user ID format");
+        }
+        
         UpdateResult result = UserAccount.mongoCollection().updateOne(
                 Filters.eq("_id", new ObjectId(userId)),
                 Updates.inc("gold", amount)
@@ -90,6 +94,25 @@ public class UserAccountService {
 
         if (result.getMatchedCount() == 0) {
             throw new NotFoundException("User not found");
+        }
+    }
+
+    @Transactional
+    public void removeGold(String userId, long amount) {
+        if (!ObjectId.isValid(userId)) {
+            throw new BadRequestException("Invalid user ID format");
+        }
+
+        UpdateResult result = UserAccount.mongoCollection().updateOne(
+                Filters.and(
+                    Filters.eq("_id", new ObjectId(userId)),
+                    Filters.gte("gold", amount)
+                ),
+                Updates.inc("gold", -amount)
+        );
+
+        if (result.getMatchedCount() == 0) {
+            throw new NotFoundException("User not found or insufficient gold");
         }
     }
 

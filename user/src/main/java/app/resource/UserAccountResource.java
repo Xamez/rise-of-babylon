@@ -48,11 +48,22 @@ public class UserAccountResource {
 
     @PermitAll
     @POST
-    @Path("/{id}/gold")
+    @Path("/{id}/gold/add")
     @APIResponse(responseCode = "204", description = "Gold added successfully")
+    @APIResponse(responseCode = "400", description = "Invalid user ID format")
     @APIResponse(responseCode = "404", description = "User not found")
-    public void addGold(@PathParam("id") String id, @QueryParam("amount") @Min(0) long amount) {
+    public void addGold(@PathParam("id") String id, @QueryParam("amount") @Min(1) long amount) {
         userAccountService.addGold(id, amount);
+    }
+
+    @PermitAll
+    @POST
+    @Path("/{id}/gold/remove")
+    @APIResponse(responseCode = "204", description = "Gold added successfully")
+    @APIResponse(responseCode = "400", description = "Invalid user ID format")
+    @APIResponse(responseCode = "404", description = "User not found")
+    public void removeGold(@PathParam("id") String id, @QueryParam("amount") @Min(1) long amount) {
+        userAccountService.removeGold(id, amount);
     }
 
 }

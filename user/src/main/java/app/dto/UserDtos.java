@@ -26,10 +26,12 @@ public class UserDtos {
             String username,
 
             @NotNull
+            @NotBlank
             @Email
             String email,
             @NotNull
-            @NotBlank String password) {
+            @NotBlank
+            String password) {
     }
 
     public record TokenResponse(String token) {
