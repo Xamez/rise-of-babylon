@@ -66,4 +66,23 @@ public class UserAccountResource {
         userAccountService.removeGold(id, amount);
     }
 
+    @PermitAll
+    @POST
+    @Path("/password/reset-request")
+    @APIResponse(responseCode = "200", description = "Password reset email triggered")
+    @APIResponse(responseCode = "401", description = "Unauthorized")
+    @APIResponse(responseCode = "404", description = "User not found")
+    public UserDtos.PasswordResetResponse requestPasswordReset() {
+        return userAccountService.initiatePasswordReset();
+    }
+
+    // THOUGHT: Should this be @Authenticated or @PermitAll?
+    @POST
+    @Path("/password/reset")
+    @APIResponse(responseCode = "200", description = "Password reset completed")
+    @APIResponse(responseCode = "400", description = "Invalid token or password does not meet policy")
+    public UserDtos.PasswordResetResponse resetPassword(@Valid UserDtos.PasswordResetConfirm confirm) {
+        return userAccountService.completePasswordReset(confirm);
+    }
+
 }

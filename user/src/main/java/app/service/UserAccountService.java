@@ -1,11 +1,15 @@
 package app.service;
 
 import app.dto.UserDtos;
+import app.dto.UserDtos.PasswordResetConfirm;
+import app.dto.UserDtos.PasswordResetResponse;
+import app.messaging.PasswordResetMessage;
 import app.model.UserAccount;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
 import io.quarkus.elytron.security.common.BcryptUtil;
+import io.quarkus.logging.Log;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,14 +19,28 @@ import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotFoundException;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Base64;
+
+import static app.dto.UserDtos.PASSWORD_POLICY_MESSAGE;
+import static app.dto.UserDtos.PASSWORD_POLICY_REGEX;
 
 @ApplicationScoped
 public class UserAccountService {
 
     @Inject
     JsonWebToken jwt;
+
+    @Inject
+    @Channel("password-reset-out")
+    Emitter<PasswordResetMessage> passwordResetEmitter;
+
+    private static final Duration RESET_TOKEN_TTL = Duration.ofMinutes(30);
 
     @Transactional
     public UserDtos.TokenResponse signUp(UserDtos.UserSignup userSignup) {
@@ -34,10 +52,14 @@ public class UserAccountService {
             throw new BadRequestException("Username already exists");
         }
 
+        if (!userSignup.password().matches(PASSWORD_POLICY_REGEX)) {
+            throw new BadRequestException(PASSWORD_POLICY_MESSAGE);
+        }
+
         var userAccount = new UserAccount();
         userAccount.setUsername(userSignup.username());
         userAccount.setEmail(userSignup.email());
-        userAccount.setPassword(BcryptUtil.bcryptHash(userSignup.password()));
+        userAccount.setPassword(hashPassword(userSignup.password()));
         userAccount.setLastConnectedAt(Instant.now());
         userAccount.setGold(0);
         userAccount.persist();
@@ -86,7 +108,7 @@ public class UserAccountService {
         if (!ObjectId.isValid(userId)) {
             throw new BadRequestException("Invalid user ID format");
         }
-        
+
         UpdateResult result = UserAccount.mongoCollection().updateOne(
                 Filters.eq("_id", new ObjectId(userId)),
                 Updates.inc("gold", amount)
@@ -95,6 +117,7 @@ public class UserAccountService {
         if (result.getMatchedCount() == 0) {
             throw new NotFoundException("User not found");
         }
+        Log.infov("Added {0} gold to user {1}", amount, userId);
     }
 
     @Transactional
@@ -105,8 +128,8 @@ public class UserAccountService {
 
         UpdateResult result = UserAccount.mongoCollection().updateOne(
                 Filters.and(
-                    Filters.eq("_id", new ObjectId(userId)),
-                    Filters.gte("gold", amount)
+                        Filters.eq("_id", new ObjectId(userId)),
+                        Filters.gte("gold", amount)
                 ),
                 Updates.inc("gold", -amount)
         );
@@ -114,6 +137,61 @@ public class UserAccountService {
         if (result.getMatchedCount() == 0) {
             throw new NotFoundException("User not found or insufficient gold");
         }
+        Log.infov("Removed {0} gold from user {1}", amount, userId);
+    }
+
+    @Transactional
+    public PasswordResetResponse initiatePasswordReset() {
+//        String email = jwt.getClaim("email");
+        String email = "maxence.tourniayre@gmail.com"; // TEMPORARY HARD CODED EMAIL FOR TESTING PURPOSES
+        UserAccount user = UserAccount.find("email", email).firstResult();
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        String token = generateSecureToken();
+        Instant expiresAt = Instant.now().plus(RESET_TOKEN_TTL);
+        user.setPasswordResetToken(token);
+        user.setPasswordResetTokenExpiresAt(expiresAt);
+        user.persistOrUpdate();
+        Log.infov("Password reset requested for user {0}", user.getEmail());
+        try {
+            passwordResetEmitter.send(new PasswordResetMessage(user.getEmail(), user.getUsername(), token));
+        } catch (Exception e) {
+            Log.error("Failed to publish password reset message", e);
+            throw new RuntimeException("Unable to send password reset email");
+        }
+        Log.infov("Password reset token published for user {0}", user.getEmail());
+        return new PasswordResetResponse("RESET_EMAIL_SENT");
+    }
+
+    @Transactional
+    public PasswordResetResponse completePasswordReset(PasswordResetConfirm confirm) {
+        UserAccount user = UserAccount.find("passwordResetToken", confirm.token()).firstResult();
+        if (user == null) {
+            throw new NotFoundException("Invalid token");
+        }
+        if (user.getPasswordResetTokenExpiresAt() == null || user.getPasswordResetTokenExpiresAt().isBefore(Instant.now())) {
+            throw new BadRequestException("Token expired");
+        }
+        if (!confirm.newPassword().matches(PASSWORD_POLICY_REGEX)) {
+            throw new BadRequestException(PASSWORD_POLICY_MESSAGE);
+        }
+        user.setPassword(hashPassword(confirm.newPassword()));
+        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenExpiresAt(null);
+        user.persistOrUpdate();
+        Log.infov("Password reset completed for user {0}", user.getEmail());
+        return new PasswordResetResponse("PASSWORD_UPDATED");
+    }
+
+    private String generateSecureToken() {
+        byte[] randomBytes = new byte[32];
+        new SecureRandom().nextBytes(randomBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+    }
+
+    private String hashPassword(String password) {
+        return BcryptUtil.bcryptHash(password);
     }
 
 }

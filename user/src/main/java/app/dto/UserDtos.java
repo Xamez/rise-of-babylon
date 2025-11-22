@@ -8,6 +8,9 @@ import jakarta.validation.constraints.Size;
 
 public class UserDtos {
 
+    public static final String PASSWORD_POLICY_REGEX = "^(?=.*[A-Z])(?=.*\\d).{6,}$";
+    public static final String PASSWORD_POLICY_MESSAGE = "Password must be at least 6 characters long and contain at least one uppercase letter and one number";
+
     public record UserLogin(
             @NotNull
             @NotBlank
@@ -31,9 +34,20 @@ public class UserDtos {
             String email,
             @NotNull
             @NotBlank
+            @Pattern(regexp = PASSWORD_POLICY_REGEX, message = PASSWORD_POLICY_MESSAGE)
             String password) {
     }
 
     public record TokenResponse(String token) {
+    }
+
+    public record PasswordResetConfirm(
+            @NotNull @NotBlank String token,
+            @NotNull @NotBlank
+            @Pattern(regexp = PASSWORD_POLICY_REGEX, message = PASSWORD_POLICY_MESSAGE)
+            String newPassword) {
+    }
+
+    public record PasswordResetResponse(String status) {
     }
 }

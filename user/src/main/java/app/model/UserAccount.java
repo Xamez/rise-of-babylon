@@ -45,4 +45,7 @@ public class UserAccount extends PanacheMongoEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    private String passwordResetToken;
+    private Instant passwordResetTokenExpiresAt;
+
 }
