@@ -48,6 +48,4 @@ public class UserDtos {
             String newPassword) {
     }
 
-    public record PasswordResetResponse(String status) {
-    }
 }

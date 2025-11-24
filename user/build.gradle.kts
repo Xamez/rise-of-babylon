@@ -31,6 +31,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.42")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+    testImplementation("io.smallrye.reactive:smallrye-reactive-messaging-in-memory")
 }
 
 group = "app"

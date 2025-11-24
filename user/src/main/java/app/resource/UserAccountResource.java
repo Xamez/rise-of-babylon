@@ -51,7 +51,7 @@ public class UserAccountResource {
     @Path("/{id}/gold/add")
     @APIResponse(responseCode = "204", description = "Gold added successfully")
     @APIResponse(responseCode = "400", description = "Invalid user ID format")
-    @APIResponse(responseCode = "404", description = "User not found")
+    @APIResponse(responseCode = "400", description = "Unable to add gold to user")
     public void addGold(@PathParam("id") String id, @QueryParam("amount") @Min(1) long amount) {
         userAccountService.addGold(id, amount);
     }
@@ -61,28 +61,28 @@ public class UserAccountResource {
     @Path("/{id}/gold/remove")
     @APIResponse(responseCode = "204", description = "Gold added successfully")
     @APIResponse(responseCode = "400", description = "Invalid user ID format")
-    @APIResponse(responseCode = "404", description = "User not found")
+    @APIResponse(responseCode = "400", description = "Unable to remove gold from user")
     public void removeGold(@PathParam("id") String id, @QueryParam("amount") @Min(1) long amount) {
         userAccountService.removeGold(id, amount);
     }
 
-    @PermitAll
+    @Authenticated
     @POST
     @Path("/password/reset-request")
-    @APIResponse(responseCode = "200", description = "Password reset email triggered")
+    @APIResponse(responseCode = "204", description = "Password reset email triggered")
     @APIResponse(responseCode = "401", description = "Unauthorized")
     @APIResponse(responseCode = "404", description = "User not found")
-    public UserDtos.PasswordResetResponse requestPasswordReset() {
-        return userAccountService.initiatePasswordReset();
+    public void requestPasswordReset() {
+        userAccountService.initiatePasswordReset();
     }
 
-    // THOUGHT: Should this be @Authenticated or @PermitAll?
+    @PermitAll
     @POST
     @Path("/password/reset")
-    @APIResponse(responseCode = "200", description = "Password reset completed")
+    @APIResponse(responseCode = "204", description = "Password reset completed")
     @APIResponse(responseCode = "400", description = "Invalid token or password does not meet policy")
-    public UserDtos.PasswordResetResponse resetPassword(@Valid UserDtos.PasswordResetConfirm confirm) {
-        return userAccountService.completePasswordReset(confirm);
+    public void resetPassword(@Valid UserDtos.PasswordResetConfirm confirm) {
+        userAccountService.completePasswordReset(confirm);
     }
 
 }

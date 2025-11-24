@@ -2,7 +2,6 @@ package app.service;
 
 import app.dto.UserDtos;
 import app.dto.UserDtos.PasswordResetConfirm;
-import app.dto.UserDtos.PasswordResetResponse;
 import app.messaging.PasswordResetMessage;
 import app.model.UserAccount;
 import com.mongodb.client.model.Filters;
@@ -115,7 +114,7 @@ public class UserAccountService {
         );
 
         if (result.getMatchedCount() == 0) {
-            throw new NotFoundException("User not found");
+            throw new BadRequestException("Unable to add gold to user");
         }
         Log.infov("Added {0} gold to user {1}", amount, userId);
     }
@@ -135,15 +134,14 @@ public class UserAccountService {
         );
 
         if (result.getMatchedCount() == 0) {
-            throw new NotFoundException("User not found or insufficient gold");
+            throw new BadRequestException("Unable to remove gold from user");
         }
         Log.infov("Removed {0} gold from user {1}", amount, userId);
     }
 
     @Transactional
-    public PasswordResetResponse initiatePasswordReset() {
-//        String email = jwt.getClaim("email");
-        String email = "maxence.tourniayre@gmail.com"; // TEMPORARY HARD CODED EMAIL FOR TESTING PURPOSES
+    public void initiatePasswordReset() {
+        String email = jwt.getClaim("email");
         UserAccount user = UserAccount.find("email", email).firstResult();
         if (user == null) {
             throw new NotFoundException("User not found");
@@ -161,11 +159,10 @@ public class UserAccountService {
             throw new RuntimeException("Unable to send password reset email");
         }
         Log.infov("Password reset token published for user {0}", user.getEmail());
-        return new PasswordResetResponse("RESET_EMAIL_SENT");
     }
 
     @Transactional
-    public PasswordResetResponse completePasswordReset(PasswordResetConfirm confirm) {
+    public void completePasswordReset(PasswordResetConfirm confirm) {
         UserAccount user = UserAccount.find("passwordResetToken", confirm.token()).firstResult();
         if (user == null) {
             throw new NotFoundException("Invalid token");
@@ -181,7 +178,6 @@ public class UserAccountService {
         user.setPasswordResetTokenExpiresAt(null);
         user.persistOrUpdate();
         Log.infov("Password reset completed for user {0}", user.getEmail());
-        return new PasswordResetResponse("PASSWORD_UPDATED");
     }
 
     private String generateSecureToken() {
