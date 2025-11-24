@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SERVICES=("notification" "user")
+SERVICES=("notification" "user", "city")
 TEMP_PRIV=$(mktemp -u)
 TEMP_PUB="${TEMP_PRIV}_pub"
 

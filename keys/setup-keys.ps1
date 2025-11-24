@@ -1,4 +1,4 @@
-$services = @("notification", "user")
+$services = @("notification", "user", "city")
 $tempPriv = Join-Path $env:TEMP ("pkcs8_" + [System.Guid]::NewGuid().ToString())
 $tempPub = $tempPriv + "_pub"
 
