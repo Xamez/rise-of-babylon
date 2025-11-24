@@ -14,22 +14,16 @@ public class PasswordResetListener {
     @Inject
     PasswordResetMailService mailService;
 
-    // NOTE: Still issue with channel (do not work until routing key '#' is added...)
-    @Incoming("password-reset-in")
+    @Incoming("password-reset")
     @Blocking
     @Retry(maxRetries = 5, delay = 500, maxDuration = 5000, jitter = 200)
     public void onMessage(JsonObject passwordResetJson) {
-        PasswordResetMessage mail = new PasswordResetMessage(
-                passwordResetJson.getString("email"),
-                passwordResetJson.getString("username"),
-                passwordResetJson.getString("token")
-        );
-        try {
-            mailService.sendResetMail(mail);
-            Log.infov("Password reset mail enqueued for {0}", mail.email());
-        } catch (Exception e) {
-            Log.errorf(e, "Failed to send reset mail to %s", mail.email());
-            throw e;
-        }
+        var mail = passwordResetJson.mapTo(PasswordResetMessage.class);
+        mailService.sendResetMail(mail)
+                .subscribe().with(
+                        success -> Log.infov("Password reset mail enqueued for {0}", mail.email()),
+                        failure -> Log.errorf(failure, "Failed to send reset mail to %s", mail.email())
+                );
+
     }
 }

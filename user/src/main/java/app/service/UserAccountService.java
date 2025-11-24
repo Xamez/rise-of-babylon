@@ -37,7 +37,7 @@ public class UserAccountService {
     JsonWebToken jwt;
 
     @Inject
-    @Channel("password-reset-out")
+    @Channel("password-reset")
     Emitter<PasswordResetMessage> passwordResetEmitter;
 
     private static final Duration RESET_TOKEN_TTL = Duration.ofMinutes(30);
