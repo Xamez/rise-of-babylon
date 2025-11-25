@@ -26,9 +26,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 
-import static app.dto.UserDtos.PASSWORD_POLICY_MESSAGE;
-import static app.dto.UserDtos.PASSWORD_POLICY_REGEX;
-
 @ApplicationScoped
 public class UserAccountService {
 
@@ -49,10 +46,6 @@ public class UserAccountService {
 
         if (UserAccount.find("username", userSignup.username()).firstResult() != null) {
             throw new BadRequestException("Username already exists");
-        }
-
-        if (!userSignup.password().matches(PASSWORD_POLICY_REGEX)) {
-            throw new BadRequestException(PASSWORD_POLICY_MESSAGE);
         }
 
         var userAccount = new UserAccount();
@@ -169,9 +162,6 @@ public class UserAccountService {
         }
         if (user.getPasswordResetTokenExpiresAt() == null || user.getPasswordResetTokenExpiresAt().isBefore(Instant.now())) {
             throw new BadRequestException("Token expired");
-        }
-        if (!confirm.newPassword().matches(PASSWORD_POLICY_REGEX)) {
-            throw new BadRequestException(PASSWORD_POLICY_MESSAGE);
         }
         user.setPassword(hashPassword(confirm.newPassword()));
         user.setPasswordResetToken(null);

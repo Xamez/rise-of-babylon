@@ -21,6 +21,9 @@ dependencies {
     implementation("io.quarkus:quarkus-smallrye-fault-tolerance")
     implementation("io.quarkiverse.mailpit:quarkus-mailpit:1.8.0")
     testImplementation("io.quarkus:quarkus-junit5")
+    testImplementation("io.smallrye.reactive:smallrye-reactive-messaging-in-memory")
+    testImplementation("io.quarkus:quarkus-junit5-mockito")
+    testImplementation("org.awaitility:awaitility")
 }
 
 group = "app"

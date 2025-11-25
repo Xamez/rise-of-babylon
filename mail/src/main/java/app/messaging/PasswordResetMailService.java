@@ -14,14 +14,21 @@ public class PasswordResetMailService {
     ReactiveMailer reactiveMailer;
 
     public Uni<Void> sendResetMail(PasswordResetMessage payload) {
+        var text =
+                """
+                        Hello %s...
+                       \s
+                        To reset your password, please click on the following link:\s
+                       \s
+                        https://sumerwars.com/reset-password?token=%s
+                       \s
+                        If you did not request a password reset, please ignore this email.
+                       \s
+                        Best regards,
+                        The Sumer Wars Team
+                       \s""".formatted(payload.username(), payload.token());
         Mail mail = Mail
-                .withText(payload.email(), "Password reset",
-                        "Hello %s...".formatted(payload.username()) +
-                                "\n\nTo reset your password, please click on the following link: " +
-                                "\n\nhttps://sumerwars.com/reset-password?token=%s".formatted(payload.token()) +
-                                "\n\nIf you did not request a password reset, please ignore this email." +
-                                "\n\nBest regards," +
-                                "\nThe Sumer Wars Team")
+                .withText(payload.email(), "Password reset", text)
                 .setFrom("no-reply@sumerwars.com");
 
         Log.infof("Sending password reset mail to %s", payload.email());

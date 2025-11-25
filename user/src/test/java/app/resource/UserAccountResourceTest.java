@@ -485,7 +485,7 @@ public class UserAccountResourceTest {
         // Verify message was sent
         InMemorySink<PasswordResetMessage> sink = connector.sink("password-reset");
         assertEquals(1, sink.received().size());
-        PasswordResetMessage message = sink.received().get(0).getPayload();
+        PasswordResetMessage message = sink.received().getFirst().getPayload();
         assertEquals("elrond@rivendell.com", message.email());
         assertEquals("elrond", message.username());
         assertNotNull(message.token());
