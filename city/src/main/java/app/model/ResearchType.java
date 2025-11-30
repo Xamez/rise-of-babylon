@@ -1,36 +1,54 @@
 package app.model;
 
+import lombok.Getter;
+
+import java.util.Arrays;
+import java.util.Set;
+
+@Getter
 public enum ResearchType {
-    // Military - Infantry & Defense
-    PHALANX_FORMATION,      // +20% defense Spears/Guards
-    ADVANCED_METALLURGY,    // +15% attack Melee units
-    SHIELD_WALL,            // +10% defense vs Ranged (Immortals)
-    SIEGE_TACTICS,          // Bonus damage vs Walls (War Barges/Infantry)
+    // TIER 1
+    CANAL_DREDGING(),
+    DEEP_MINING(),
+    BRICK_FIRING(),
 
-    // Military - Ranged
-    COMPOSITE_BOW,          // +15% range/attack Archers
-    HAIL_OF_ARROWS,         // Special: Area damage (Master Archers)
+    // TIER 2
+    BRONZE_METALLURGY(DEEP_MINING),
+    WATERPROOFING(CANAL_DREDGING),
+    SIGNAL_FIRE_SYSTEM(BRICK_FIRING),
+    ZIGGURAT_ASTRONOMY(BRICK_FIRING),
 
-    // Military - Cavalry & Chariots
-    EQUESTRIAN_ART,         // +10% speed Cavalry/Scouts
-    CHARIOT_MASTERY,        // +15% attack Chariots
-    SCYTHED_WHEELS,         // Bonus damage vs Infantry (Scythe Chariots)
+    // TIER 3
+    PHALANX_FORMATION(BRONZE_METALLURGY),
+    SLING_AMMUNITION(BRONZE_METALLURGY),
+    SPOKED_WHEELS(BRONZE_METALLURGY),
+    STANDARDIZED_WEIGHTS(WATERPROOFING),
+    MILITARY_CIPHER(SIGNAL_FIRE_SYSTEM),
+    DIVINE_CONTRACT(ZIGGURAT_ASTRONOMY),
 
-    // Military - Naval
-    BITUMEN_FIRE,           // Bonus attack for War Barges
+    // TIER 4
+    LARGE_SHIELDS(PHALANX_FORMATION),
+    COMPOSITE_BOW(SLING_AMMUNITION),
+    REINFORCED_AXLE(SPOKED_WHEELS),
+    NAVAL_RAM(WATERPROOFING),
+    BORDER_PATROLS(MILITARY_CIPHER),
+    CARAVAN_LOGISTICS(STANDARDIZED_WEIGHTS),
+    THEOCRACY(ZIGGURAT_ASTRONOMY),
+    SCYTHED_BLADES(REINFORCED_AXLE),
 
-    // Civil
-    ADVANCED_IRRIGATION,    // +20% Wheat production
-    ARCHITECTURE,           // -15% construction cost
-    RIVER_NAVIGATION,       // +25% fleet speed
+    // TIER 5
+    DYNASTIC_ADMINISTRATION(THEOCRACY, CARAVAN_LOGISTICS);
 
-    // Religious
-    SACRED_RITUALS,         // Amplified Divine Tears effects
-    DIVINE_BLESSINGS,       // Temporary army bonuses
-    MYTHICAL_BINDING,       // Reduces cost of Myth units
+    private final Set<ResearchType> requiredTechs;
 
-    // Commercial
-    TRADE_ROUTES,           // -20% transport cost
-    NEGOTIATION,            // +10% trade profits
-    CURRENCY                // Advanced market system
+    ResearchType(ResearchType... requiredTechs) {
+        this.requiredTechs = Set.of(requiredTechs);
+    }
+
+    public boolean isUnlockable(Set<ResearchType> researchedTechs) {
+        if (this.requiredTechs == null || this.requiredTechs.isEmpty())
+            return true;
+
+        return researchedTechs.containsAll(this.requiredTechs);
+    }
 }

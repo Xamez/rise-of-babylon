@@ -4,21 +4,20 @@ import io.smallrye.common.constraint.NotNull;
 
 public record Resources(
         @NotNull
-        double wheat,
+        double barley,
 
         @NotNull
         double clay,
 
         @NotNull
-        double copper,
+        double bronze,
 
         @NotNull
         double wood,
 
         @NotNull
-        double lapisLazuli,
+        double favor,
 
         @NotNull
-        double tears
-) {
-}
+        double lapisLazuli
+) {}

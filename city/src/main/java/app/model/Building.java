@@ -8,5 +8,4 @@ public record Building(
 
         @NotNull
         int level
-) {
-}
+) {}

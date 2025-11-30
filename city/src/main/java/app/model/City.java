@@ -28,7 +28,7 @@ public class City extends PanacheMongoEntity {
     private Instant lastUpdated;
 
     @NotNull
-    private Buildings buildings;
+    private List<Building> buildings;
 
     @NotNull
     private List<Bonus> bonuses;

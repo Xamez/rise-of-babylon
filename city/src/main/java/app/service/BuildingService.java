@@ -10,10 +10,7 @@ public class BuildingService {
         if (level == 0) return 0;
 
         return switch (type) {
-            case IRRIGATED_FIELDS -> 10 * Math.pow(1.2, level);
-            case CLAY_POOL -> 8 * Math.pow(1.15, level);
-            case COPPER_MINE -> 5 * Math.pow(1.1, level);
-            case TEMPLE -> level;
+            case BARLEY_FIELDS -> 10 * Math.pow(1.2, level);
             default -> 0;
         };
     }

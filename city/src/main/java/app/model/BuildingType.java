@@ -2,26 +2,25 @@ package app.model;
 
 public enum BuildingType {
     // Production
-    IRRIGATED_FIELDS,   // Wheat
-    CLAY_POOL,          // Clay
-    COPPER_MINE,        // Copper
-    WAREHOUSE,          // Storage
+    BARLEY_FIELDS,
+    CLAY_PIT,
+    BRONZE_FOUNDRY,
+    WAREHOUSE,
 
     // Military
-    WEAPON_DISTRICT,    // Infantry/Cavalry
-    RIVER_SHIPYARD,     // Navy
+    BARRACKS,
+    RIVER_SHIPYARD,
 
     // Defensive
-    WALLS,              // Walls
-    WATCHTOWER,         // Watchtower
+    CITY_WALLS,
+    WATCHTOWER,
 
     // Civil & Religious
-    DWELLING,           // Population
-    MARKET,             // Trade
-    TEMPLE,             // Tears/Faith
-    SCRIBE_SCHOOL,      // Research
+    DWELLING,
+    SOUK,
+    ZIGGURAT,
+    TABLET_HOUSE,
 
     // Special
-    ROYAL_PALACE,       // HQ
-    ZIGGURAT            // Victory
+    ROYAL_PALACE,
 }
