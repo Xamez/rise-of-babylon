@@ -1,12 +1,12 @@
 ﻿# SumerWars
 
-> **Note:** The project might be renamed to "Babylon Wars" or "Rise of Babylon".
+> **Note:** The project might be renamed to "Babylon Wars" or "Rise of Babylon"
 
 ## 1. Overview
 
 SumerWars is a real-time strategy (MMORTS) game set in ancient Mesopotamia. Players govern a city-state, manage scarce
 resources, trade for survival, and wage war for supremacy. The game emphasizes logistical constraints (wood scarcity)
-and historical accuracy.
+and historical accuracy
 
 ---
 
@@ -27,7 +27,7 @@ The economy is designed around **scarcity** and **interdependence**.
 
 ## 3. Buildings
 
-Buildings have a geometric cost progression (Cost = Base * 1.2^Level).
+Buildings have a geometric cost progression (Cost = Base * 1.2^Level)
 
 ### Production
 
@@ -40,12 +40,12 @@ Buildings have a geometric cost progression (Cost = Base * 1.2^Level).
 
 ### Military & Defense
 
-| Building           | Function                             | Base Cost            |
-|:-------------------|:-------------------------------------|:---------------------|
-| **BARRACKS**       | Trains Infantry & Cavalry            | 200 Clay, 100 Bronze |
-| **RIVER_SHIPYARD** | Builds Naval units. Needs Water tile | 150 Clay, 200 Wood   |
-| **CITY_WALLS**     | Increases City Defense %             | 500 Clay             |
-| **WATCHTOWER**     | Provides Intel on incoming attacks   | 300 Clay, 50 Wood    |
+| Building           | Function                                                     | Base Cost            |
+|:-------------------|:-------------------------------------------------------------|:---------------------|
+| **BARRACKS**       | Trains Infantry & Cavalry                                    | 200 Clay, 100 Bronze |
+| **RIVER_SHIPYARD** | Builds Naval units. Needs Water tile (`RIVER_TERRAIN` bonus) | 150 Clay, 200 Wood   |
+| **CITY_WALLS**     | Increases City Defense %                                     | 500 Clay             |
+| **WATCHTOWER**     | Provides Intel on incoming attacks                           | 300 Clay, 50 Wood    |
 
 ### Civil & Religious
 
@@ -79,21 +79,6 @@ Combat follows a **Rock-Paper-Scissors** logic:
 > * **TIME**: Training time
 > * **SIZE**: Transport space occupied by 1 unit
 > * **CARRY**: Transport capacity (Total Size allowed)
-
-## 4. Units & Combat System
-
-Combat follows a **Rock-Paper-Scissors** logic:
-
-* **Spears** beat **Cavalry/Chariots**
-* **Cavalry/Chariots** beat **Ranged/Light Inf**
-* **Ranged** beats **Spears**
-
-> **Legend:**
-> * **ATK**: Damage dealt
-> * **DEF**: Damage taken (Health + Armor)
-> * **SPD**: Movement speed (1=Slow, 20=Fast)
-> * **SIZE**: Transport space occupied by 1 unit
-> * **TIME**: Base training time (Decreases with Building Level)
 
 ### Infantry (Barracks)
 
@@ -132,7 +117,7 @@ Combat follows a **Rock-Paper-Scissors** logic:
 
 ## 5. Mythology & Deities
 
-Players choose a patron Deity. This choice defines their playstyle (Unit-focused or Spell-focused).
+Players choose a patron Deity. This choice defines their playstyle (Unit-focused or Spell-focused)
 
 | Deity       | Domain       | Type       | Unique Unit (Ziggurat)                                  | Divine Powers (Cost Favor)                                                                             |
 |:------------|:-------------|:-----------|:--------------------------------------------------------|:-------------------------------------------------------------------------------------------------------|
@@ -147,7 +132,7 @@ Players choose a patron Deity. This choice defines their playstyle (Unit-focused
 
 ### 5.1 Mythical Unit Stat
 
-Details for the "Guardian" Gods.
+Details for the "Guardian" Gods
 
 | Unit                  | Deity   | Cost                           | ATK | DEF | SPD |  SIZE  |    TIME     | Special Ability                    |
 |:----------------------|:--------|:-------------------------------|:---:|:---:|:---:|:------:|:-----------:|:-----------------------------------|
@@ -158,7 +143,7 @@ Details for the "Guardian" Gods.
 
 ### 5.2 Divine Spell Costs
 
-Details for the "Intervener" Gods.
+Details for the "Intervener" Gods
 
 | Deity      | Spell Name           |   Cost    | Cooldown | Effect                                    |
 |:-----------|:---------------------|:---------:|:--------:|:------------------------------------------|
@@ -173,13 +158,13 @@ Details for the "Intervener" Gods.
 
 The Tablet House allows two types of research:
 
-1. **UNLOCKS (Max Level 1):** One-time research to unlock units or mechanics.
-2. **PASSIVES (Max Level 10):** Upgradable technologies providing incremental bonuses.
+1. **UNLOCKS (Max Level 1):** One-time research to unlock units or mechanics
+2. **PASSIVES (Max Level 10):** Upgradable technologies providing incremental bonuses
 
 > **Passive Progression Logic:**
-> * Cost increases with level.
-> * **Level 1:** Base Bonus (e.g., +3%).
-> * **Level 10:** Max Bonus (e.g., +30%).
+> * Cost increases with level
+> * **Level 1:** Base Bonus (e.g., +3%)
+> * **Level 10:** Max Bonus (e.g., +30%)
 
 ### Economy & Construction
 
@@ -236,25 +221,32 @@ The Tablet House allows two types of research:
 
 ---
 
-## 7. Key Mechanics
+## 7. Bonuses
+
+* **POPULATION_10**: +10% Construction Speed
+* **RIVER_TERRAIN**: Unlocks `RIVER_SHIPYARD` building
+* **MOUNTAIN_TERRAIN**: Grants +10% Defense to City Walls
+* **CROSSROADS_TERRAIN**: +10% Merchant Speed & Capacity
+
+## 8. Key Mechanics
 
 ### Espionage System
 
-* **Offense:** Send `INFORMANT` unit.
-* **Defense:** `WATCHTOWER` Level + `BORDER_PATROLS` (Tech Lvl) + Your own Spies.
+* **Offense:** Send `INFORMANT` unit
+* **Defense:** `WATCHTOWER` Level + `BORDER_PATROLS` (Tech Lvl) + Your own Spies
 * **Outcome:**
-    * **Success:** You see buildings and troops.
-    * **Failure:** Your spies are killed, enemy receives a notification "Attack prevented".
+    * **Success:** You see buildings and troops
+    * **Failure:** Your spies are killed, enemy receives a notification "Attack prevented"
 
-### Expansion (Fibonacci Sequence)
+### Expansion
 
 To build a new city, a player must pay a **Lapis Lazuli** cost that scales following the Fibonacci sequence.
-*Hard Limit:* 50 Cities max per player.
+*Hard Limit:* 50 Cities max per player
 
 > **Requirements:**
-> 1. `DYNASTIC_ADMINISTRATION` Researched.
-> 2. `SETTLER_CARAVAN` Unit trained.
-> 3. Enough **Lapis Lazuli** in stock.
+> 1. `DYNASTIC_ADMINISTRATION` Researched
+> 2. `SETTLER_CARAVAN` Unit trained
+> 3. Enough **Lapis Lazuli** in stock
 
 | City Slot # | Lapis Cost  |
 |:------------|:------------|
@@ -271,3 +263,71 @@ To build a new city, a player must pay a **Lapis Lazuli** cost that scales follo
 
 > **Calculation:** 100*(City Count^2)
 
+### Protection Period:
+
+New players have a 5-days protection period where they cannot attack or be attacked
+
+In addition to the initial protection, players can configure a recurring **Divine Truce** mode. This allows players to
+sleep or take a break without fear of losing progress, at a cost
+
+* **Configuration:** Players define a specific time window (e.g., 23:00 to 07:00)
+* **Duration:** Configurable between **0 hours** (disabled) and **8 hours** (maximum)
+
+**Mechanics:**
+
+* **Restrictions:**
+    * **No Combat:** The player cannot launch attacks (PvP or PvE)
+    * **No Expansion:** Settler Caravans cannot be deployed
+    * **Invulnerability:** The player cannot be attacked by others
+* **Allowed Actions:**
+    * Building construction and upgrades continue
+    * Unit training continues
+* **Economic Penalty:**
+    * During Sanctuary, global resource production is **reduced by 30%** (as the city prepares offerings to the gods for
+      protection)
+
+> **Breaking the Truce:**
+> If a player forces an attack command while their Sanctuary is active, the mode is **immediately cancelled** and
+> protection is lost until the next scheduled activation cycle (the following day)
+
+## 9. Conquest & Vassalage System
+
+In SumerWars, destroying a player's last city does not eliminate them from the game. Instead, it triggers the *
+*Vassalage System**. This promotes player retention and adds a layer of political intrigue
+
+### 9.1 Subjugation Mechanics
+
+When the **ROYAL_PALACE** of a player's last city is breached:
+
+1. **No Destruction:** The city is **not** destroyed. The defender retains all buildings and research
+2. **Vassal Status:** The defender becomes a **Vassal**; the attacker becomes the **Suzerain**
+3. **Tribute:** An automatic tax of **20% of all resources** is transferred instantly to the Suzerain
+
+### 9.2 Suzerain & Vassal Relations
+
+| Aspect         | Rule                                                                                                                            |
+|:---------------|:--------------------------------------------------------------------------------------------------------------------------------|
+| **Protection** | The Suzerain receives a warning if the Vassal is attacked. The Suzerain can reinforce the Vassal's city as if it were their own |
+| **Expansion**  | A Vassal **cannot** build new cities (`SETTLER_CARAVAN` disabled). They must regain independence first                          |
+| **Diplomacy**  | The Vassal cannot join an Alliance. They are considered an extension of the Suzerain's territory                                |
+| **Vision**     | The Suzerain has full vision (Intel) over the Vassal's city and troops                                                          |
+
+### 9.3 Regaining Independence
+
+A Vassal has two ways to break free:
+
+#### A. Rebellion (The War Path)
+
+* **Action:** The Vassal clicks the "Declare Independence" button
+* **Effect:**
+    * Tribute stops immediately
+    * Suzerain is notified
+    * A **24-hour War State** is locked between the two players
+    * If the Vassal defends their Palace successfully for 24h, they become free
+    * If the Suzerain breaches the Palace again, the Tribute increases to **35%** for 3 days as punishment
+
+#### B. Ransom (The Diplomatic Path)
+
+* **Action:** The Vassal (or an ally) pays a lump sum of **Lapis Lazuli** or Resources to the Suzerain
+* **Cost:** Defined by the Suzerain (with a hard cap based on the Vassal's points score to prevent abuse)
+* **Effect:** Immediate independence without bloodshed
