@@ -1,0 +1,32 @@
+{
+  "name": "sumer-wars-wiki",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Official Wiki for Sumer Wars, the MMORTS set in the ancient Mesopotamian civilisation.",
+  "keywords": [
+    "sumer",
+    "mesopotamia",
+    "civilisation",
+    "mmorts",
+    "wiki",
+    "strategie"
+  ],
+  "author": "Max",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Xamez/sumerwars"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "vitepress": "2.0.0-alpha.15"
+  },
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  }
+}

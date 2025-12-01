@@ -1,0 +1,107 @@
+/* Sumer Wars Wiki - Simplified Theme */
+
+:root {
+  /* Brand colors */
+  --vp-c-brand-1: #B8860B;
+  --vp-c-brand-2: #DAA520;
+  --vp-c-brand-3: #F4A460;
+  
+  /* Background colors */
+  --vp-c-bg: #1a1611;
+  --vp-c-bg-alt: #252116;
+  --vp-c-bg-elv: #2d261a;
+  
+  /* Text colors */
+  --vp-c-text-1: #e6dcc6;
+  --vp-c-text-2: #d4c4a0;
+  --vp-c-text-3: #a69876;
+  
+  /* Border colors */
+  --vp-c-border: #3d3426;
+  --vp-c-divider: #4a3f2e;
+}
+
+/* Tables */
+.vp-doc table {
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: rgba(42, 34, 22, 0.3);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 6px;
+  display: table;
+}
+
+.vp-doc table thead tr {
+  background: var(--vp-c-brand-1);
+}
+
+.vp-doc table th {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--vp-c-border);
+}
+
+.vp-doc table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc table tbody tr:nth-child(even) {
+  background-color: rgba(184, 134, 11, 0.08);
+}
+
+.vp-doc table td:first-child {
+  font-weight: bold;
+  color: var(--vp-c-brand-2);
+}
+
+/* Custom blocks */
+.custom-block {
+  border-radius: 8px;
+  border: 2px solid;
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+}
+
+.custom-block.tip {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.custom-block.warning {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.custom-block.danger {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.custom-block.info {
+  border-color: var(--vp-c-brand-1);
+  background: rgba(184, 134, 11, 0.1);
+}
+
+/* Headings */
+h1, h2 {
+  color: var(--vp-c-brand-2);
+  padding-bottom: 0.3rem;
+}
+
+h1 {
+  border-bottom: 2px solid var(--vp-c-brand-1);
+}
+
+h2 {
+  border-bottom: 2px solid var(--vp-c-divider);
+}
+
+/* Links */
+a {
+  color: var(--vp-c-brand-2);
+}
+
+a:hover {
+  color: var(--vp-c-brand-3);
+}
