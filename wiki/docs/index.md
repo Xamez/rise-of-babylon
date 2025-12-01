@@ -37,10 +37,10 @@ features:
 
 ### 🚀 Quick Start
 
-1. **[📖 Read the Player Guide](/guide)** – Learn the core systems
-2. **[🏛️ Study the Buildings](/buildings)** – Plan your development path
-3. **[🌾 Manage Your Resources](/resources)** – Optimize your economy
-4. **[⚔️ Train Your Armies](/units)** – Prepare for warfare
+1. **[📖 Read the Player Guide]()** – Learn the core systems
+2. **[🏛️ Study the Buildings]()** – Plan your development path
+3. **[🌾 Manage Your Resources]()** – Optimize your economy
+4. **[⚔️ Train Your Armies]()** – Prepare for warfare
 
 ---
 
