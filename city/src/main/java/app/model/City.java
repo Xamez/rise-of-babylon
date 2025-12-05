@@ -10,7 +10,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -18,7 +17,7 @@ import java.util.UUID;
 public class City extends PanacheMongoEntity {
     @NotNull
     @NotBlank
-    private UUID playerId;
+    private String userId;
 
     @NotNull
     private Resources resources;
@@ -31,8 +30,22 @@ public class City extends PanacheMongoEntity {
     private List<Building> buildings;
 
     @NotNull
+    private List<Unit> units;
+
+    private DeityType deity;
+
+    @NotNull
     private List<Bonus> bonuses;
 
     @NotNull
     private List<ResearchType> researches;
+
+    public boolean hasBuilding(BuildingType type) {
+        return buildings.stream().anyMatch(b -> b.type() == type);
+    }
+
+    public boolean hasBuildingAtLevel(BuildingType type, int level) {
+        return buildings.stream().anyMatch(b -> b.type() == type && b.level() >= level);
+    }
+
 }
