@@ -20,7 +20,7 @@ public class PasswordResetMailService {
                        \s
                         To reset your password, please click on the following link:\s
                        \s
-                        https://sumerwars.com/reset-password?token=%s
+                        https://rise-of-babylon.com/reset-password?token=%s
                        \s
                         If you did not request a password reset, please ignore this email.
                        \s
@@ -29,7 +29,7 @@ public class PasswordResetMailService {
                        \s""".formatted(payload.username(), payload.token());
         Mail mail = Mail
                 .withText(payload.email(), "Password reset", text)
-                .setFrom("no-reply@sumerwars.com");
+                .setFrom("no-reply@rise-of-babylon.com");
 
         Log.infof("Sending password reset mail to %s", payload.email());
 

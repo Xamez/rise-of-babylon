@@ -14,15 +14,18 @@ val quarkusPlatformVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
-    implementation("io.quarkus:quarkus-messaging-rabbitmq")
+    implementation("io.quarkus:quarkus-messaging-kafka")
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-smallrye-health")
+    implementation("io.quarkus:quarkus-opentelemetry")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-rest")
     implementation("io.quarkus:quarkus-smallrye-jwt")
     implementation("io.quarkus:quarkus-smallrye-openapi")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+    testImplementation("org.awaitility:awaitility")
+    testImplementation("io.smallrye.reactive:smallrye-reactive-messaging-in-memory")
 }
 
 group = "app"

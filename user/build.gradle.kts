@@ -26,11 +26,12 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-rest")
     implementation("io.quarkus:quarkus-opentelemetry")
-    implementation("io.quarkus:quarkus-messaging-rabbitmq")
+    implementation("io.quarkus:quarkus-messaging-kafka")
     implementation("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+    testImplementation("org.awaitility:awaitility")
     testImplementation("io.smallrye.reactive:smallrye-reactive-messaging-in-memory")
 }
 

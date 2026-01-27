@@ -1,10 +1,8 @@
-﻿# SumerWars
-
-> **Note:** The project might be renamed to "Babylon Wars" or "Rise of Babylon"
+# Rise of Babylon
 
 ## 1. Overview
 
-SumerWars is a real-time strategy (MMORTS) game set in ancient Mesopotamia. Players govern a city-state, manage scarce
+Rise of Babylon is a real-time strategy (MMORTS) game set in ancient Mesopotamia. Players govern a city-state, manage scarce
 resources, trade for survival, and wage war for supremacy. The game emphasizes logistical constraints (wood scarcity)
 and historical accuracy
 
