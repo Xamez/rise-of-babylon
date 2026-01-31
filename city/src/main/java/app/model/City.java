@@ -2,11 +2,10 @@ package app.model;
 
 import io.quarkus.mongodb.panache.PanacheMongoEntity;
 import io.quarkus.mongodb.panache.common.MongoEntity;
-import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,7 +22,9 @@ public class City extends PanacheMongoEntity {
     private Resources resources;
 
     @NotNull
-    @UpdateTimestamp
+    private Instant createdAt;
+
+    @NotNull
     private Instant lastUpdated;
 
     @NotNull
@@ -48,4 +49,16 @@ public class City extends PanacheMongoEntity {
         return buildings.stream().anyMatch(b -> b.type() == type && b.level() >= level);
     }
 
+    @Override
+    public void persist() {
+        this.createdAt = Instant.now();
+        this.lastUpdated = Instant.now();
+        super.persist();
+    }
+
+    @Override
+    public void update() {
+        this.lastUpdated = Instant.now();
+        super.update();
+    }
 }
