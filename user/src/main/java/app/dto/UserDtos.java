@@ -1,6 +1,6 @@
 package app.dto;
 
-import io.smallrye.common.constraint.NotNull;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -32,18 +32,35 @@ public class UserDtos {
             @NotBlank
             @Email
             String email,
+
             @NotNull
             @NotBlank
             @Pattern(regexp = PASSWORD_POLICY_REGEX, message = PASSWORD_POLICY_MESSAGE)
             String password) {
     }
 
-    public record TokenResponse(String token) {
+    public record TokenResponse(
+             @NotNull
+             @NotBlank
+             String accessToken,
+
+             @NotNull
+             @NotBlank
+             String refreshToken,
+
+             @NotNull
+             @NotBlank
+             Long refreshTokenExpiresIn
+    ) {
     }
 
     public record PasswordResetConfirm(
-            @NotNull @NotBlank String token,
-            @NotNull @NotBlank
+            @NotNull
+            @NotBlank
+            String passwordResetToken,
+
+            @NotNull
+            @NotBlank
             @Pattern(regexp = PASSWORD_POLICY_REGEX, message = PASSWORD_POLICY_MESSAGE)
             String newPassword) {
     }

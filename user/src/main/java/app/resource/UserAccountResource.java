@@ -22,7 +22,7 @@ public class UserAccountResource {
     @PermitAll
     @POST
     @Path("/signUp")
-    @APIResponse(responseCode = "200", description = "User created and token issued")
+    @APIResponse(responseCode = "200", description = "User created and passwordResetToken issued")
     @APIResponse(responseCode = "400", description = "Username or Email already exists")
     public UserDtos.TokenResponse signUp(@Valid UserDtos.UserSignup userSignup) {
         return userAccountService.signUp(userSignup);
@@ -41,7 +41,7 @@ public class UserAccountResource {
     @POST
     @Path("/refresh")
     @APIResponse(responseCode = "200", description = "Token refreshed")
-    @APIResponse(responseCode = "401", description = "Invalid or expired token")
+    @APIResponse(responseCode = "401", description = "Invalid or expired passwordResetToken")
     public UserDtos.TokenResponse refreshToken() {
         return userAccountService.refreshToken();
     }
@@ -80,7 +80,7 @@ public class UserAccountResource {
     @POST
     @Path("/password/reset")
     @APIResponse(responseCode = "204", description = "Password reset completed")
-    @APIResponse(responseCode = "400", description = "Invalid token or password does not meet policy")
+    @APIResponse(responseCode = "400", description = "Invalid passwordResetToken or password does not meet policy")
     public void resetPassword(@Valid UserDtos.PasswordResetConfirm confirm) {
         userAccountService.completePasswordReset(confirm);
     }

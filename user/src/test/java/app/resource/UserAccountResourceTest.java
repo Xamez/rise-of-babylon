@@ -42,13 +42,17 @@ public class UserAccountResourceTest {
                 .post("/api/users/signUp")
                 .then()
                 .statusCode(200)
-                .body("token", notNullValue());
+                .body("accessToken", notNullValue())
+                .body("refreshToken", notNullValue())
+                .body("refreshTokenExpiresIn", notNullValue());
 
         UserAccount user = UserAccount.find("username", "gandalf").firstResult();
         assertNotNull(user);
         assertEquals("gandalf", user.getUsername());
         assertEquals("gandalf@middleearth.com", user.getEmail());
         assertEquals(0, user.getGold());
+        assertNotNull(user.getCreatedAt());
+        assertNotNull(user.getUpdatedAt());
         assertNotNull(user.getLastConnectedAt());
     }
 
@@ -191,7 +195,9 @@ public class UserAccountResourceTest {
                 .post("/api/users/signIn")
                 .then()
                 .statusCode(200)
-                .body("token", notNullValue());
+                .body("accessToken", notNullValue())
+                .body("refreshToken", notNullValue())
+                .body("refreshTokenExpiresIn", notNullValue());
     }
 
     @Test
@@ -228,24 +234,26 @@ public class UserAccountResourceTest {
     @Test
     public void testRefreshTokenSuccess() {
         UserDtos.UserSignup signup = new UserDtos.UserSignup("frodo", "frodo@shire.com", "Ring123");
-        String token = given()
+        String refreshToken = given()
                 .contentType(ContentType.JSON)
                 .body(signup)
                 .post("/api/users/signUp")
-                .jsonPath().getString("token");
+                .jsonPath().getString("refreshToken");
 
-        String newToken = given()
-                .auth().oauth2(token)
+        String newRefreshToken = given()
+                .auth().oauth2(refreshToken)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/api/users/refresh")
                 .then()
                 .statusCode(200)
-                .body("token", notNullValue())
-                .extract().path("token");
+                .body("accessToken", notNullValue())
+                .body("refreshToken", notNullValue())
+                .body("refreshTokenExpiresIn", notNullValue())
+                .extract().path("refreshToken");
 
-        assertNotNull(newToken);
-        assertNotEquals(token, newToken);
+        assertNotNull(newRefreshToken);
+        assertNotEquals(refreshToken, newRefreshToken);
     }
 
     @Test
@@ -261,16 +269,16 @@ public class UserAccountResourceTest {
     @Test
     public void testRefreshTokenUserDeleted() {
         UserDtos.UserSignup signup = new UserDtos.UserSignup("samwise", "sam@gamgee.com", "Potato1");
-        String token = given()
+        String refreshToken = given()
                 .contentType(ContentType.JSON)
                 .body(signup)
                 .post("/api/users/signUp")
-                .jsonPath().getString("token");
+                .jsonPath().getString("refreshToken");
 
         UserAccount.deleteAll();
 
         given()
-                .auth().oauth2(token)
+                .auth().oauth2(refreshToken)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/api/users/refresh")
@@ -282,18 +290,18 @@ public class UserAccountResourceTest {
     @Test
     public void testRefreshTokenUsernameMismatch() {
         UserDtos.UserSignup signup = new UserDtos.UserSignup("smeagol", "my@precious.com", "Fish123");
-        String token = given()
+        String refreshToken = given()
                 .contentType(ContentType.JSON)
                 .body(signup)
                 .post("/api/users/signUp")
-                .jsonPath().getString("token");
+                .jsonPath().getString("refreshToken");
 
         UserAccount user = UserAccount.find("username", "smeagol").firstResult();
         user.setUsername("gollum");
         user.update();
 
         given()
-                .auth().oauth2(token)
+                .auth().oauth2(refreshToken)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/api/users/refresh")
@@ -462,21 +470,21 @@ public class UserAccountResourceTest {
     @Test
     public void testPasswordResetRequestSuccess() {
         UserDtos.UserSignup signup = new UserDtos.UserSignup("elrond", "elrond@rivendell.com", "Rivendell1");
-        String token = given()
+        String refreshToken = given()
                 .contentType(ContentType.JSON)
                 .body(signup)
                 .post("/api/users/signUp")
-                .jsonPath().getString("token");
+                .jsonPath().getString("refreshToken");
 
         given()
-                .auth().oauth2(token)
+                .auth().oauth2(refreshToken)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/api/users/password/reset-request")
                 .then()
                 .statusCode(204);
 
-        // Verify user has reset token
+        // Verify user has reset passwordResetToken
         UserAccount user = UserAccount.find("email", "elrond@rivendell.com").firstResult();
         assertNotNull(user.getPasswordResetToken());
         assertNotNull(user.getPasswordResetTokenExpiresAt());
@@ -504,16 +512,16 @@ public class UserAccountResourceTest {
     @Test
     public void testPasswordResetRequestUserNotFound() {
         UserDtos.UserSignup signup = new UserDtos.UserSignup("celeborn", "celeborn@lothlorien.com", "Galadriel1");
-        String token = given()
+        String accessToken = given()
                 .contentType(ContentType.JSON)
                 .body(signup)
                 .post("/api/users/signUp")
-                .jsonPath().getString("token");
+                .jsonPath().getString("accessToken");
 
         UserAccount.deleteAll();
 
         given()
-                .auth().oauth2(token)
+                .auth().oauth2(accessToken)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/api/users/password/reset-request")
@@ -528,11 +536,11 @@ public class UserAccountResourceTest {
         user.setUsername("arwen");
         user.setEmail("arwen@rivendell.com");
         user.setPassword("OldPassword1");
-        user.setPasswordResetToken("valid-token-123");
+        user.setPasswordResetToken("valid-passwordResetToken-123");
         user.setPasswordResetTokenExpiresAt(Instant.now().plusSeconds(1800));
         user.persist();
 
-        UserDtos.PasswordResetConfirm confirm = new UserDtos.PasswordResetConfirm("valid-token-123", "NewPassword1");
+        UserDtos.PasswordResetConfirm confirm = new UserDtos.PasswordResetConfirm("valid-passwordResetToken-123", "NewPassword1");
 
         given()
                 .contentType(ContentType.JSON)
@@ -542,7 +550,7 @@ public class UserAccountResourceTest {
                 .then()
                 .statusCode(204);
 
-        // Verify token is cleared
+        // Verify passwordResetToken is cleared
         UserAccount updated = UserAccount.findById(user.id);
         assertNull(updated.getPasswordResetToken());
         assertNull(updated.getPasswordResetTokenExpiresAt());
@@ -559,7 +567,7 @@ public class UserAccountResourceTest {
 
     @Test
     public void testPasswordResetCompleteInvalidToken() {
-        UserDtos.PasswordResetConfirm confirm = new UserDtos.PasswordResetConfirm("invalid-token", "NewPassword1");
+        UserDtos.PasswordResetConfirm confirm = new UserDtos.PasswordResetConfirm("invalid-passwordResetToken", "NewPassword1");
 
         given()
                 .contentType(ContentType.JSON)
@@ -568,7 +576,7 @@ public class UserAccountResourceTest {
                 .post("/api/users/password/reset")
                 .then()
                 .statusCode(404)
-                .body("message", containsString("Invalid token"));
+                .body("message", containsString("Invalid passwordResetToken"));
     }
 
     @Test
@@ -577,11 +585,11 @@ public class UserAccountResourceTest {
         user.setUsername("galadriel");
         user.setEmail("galadriel@lothlorien.com");
         user.setPassword("OldPassword1");
-        user.setPasswordResetToken("expired-token");
+        user.setPasswordResetToken("expired-passwordResetToken");
         user.setPasswordResetTokenExpiresAt(Instant.now().minusSeconds(60));
         user.persist();
 
-        UserDtos.PasswordResetConfirm confirm = new UserDtos.PasswordResetConfirm("expired-token", "NewPassword1");
+        UserDtos.PasswordResetConfirm confirm = new UserDtos.PasswordResetConfirm("expired-passwordResetToken", "NewPassword1");
 
         given()
                 .contentType(ContentType.JSON)
@@ -599,12 +607,12 @@ public class UserAccountResourceTest {
         user.setUsername("saruman");
         user.setEmail("saruman@isengard.com");
         user.setPassword("OldPassword1");
-        user.setPasswordResetToken("valid-token");
+        user.setPasswordResetToken("valid-passwordResetToken");
         user.setPasswordResetTokenExpiresAt(Instant.now().plusSeconds(1800));
         user.persist();
 
         // No uppercase
-        UserDtos.PasswordResetConfirm weakPassword1 = new UserDtos.PasswordResetConfirm("valid-token", "password1");
+        UserDtos.PasswordResetConfirm weakPassword1 = new UserDtos.PasswordResetConfirm("valid-passwordResetToken", "password1");
         given()
                 .contentType(ContentType.JSON)
                 .body(weakPassword1)
@@ -615,7 +623,7 @@ public class UserAccountResourceTest {
                 .body("violations.message", hasItem(containsString("Password must be at least 6 characters")));
 
         // No number
-        UserDtos.PasswordResetConfirm weakPassword2 = new UserDtos.PasswordResetConfirm("valid-token", "Password");
+        UserDtos.PasswordResetConfirm weakPassword2 = new UserDtos.PasswordResetConfirm("valid-passwordResetToken", "Password");
         given()
                 .contentType(ContentType.JSON)
                 .body(weakPassword2)
@@ -626,7 +634,7 @@ public class UserAccountResourceTest {
                 .body("violations.message", hasItem(containsString("Password must be at least 6 characters")));
 
         // Too short
-        UserDtos.PasswordResetConfirm weakPassword3 = new UserDtos.PasswordResetConfirm("valid-token", "Pa1");
+        UserDtos.PasswordResetConfirm weakPassword3 = new UserDtos.PasswordResetConfirm("valid-passwordResetToken", "Pa1");
         given()
                 .contentType(ContentType.JSON)
                 .body(weakPassword3)

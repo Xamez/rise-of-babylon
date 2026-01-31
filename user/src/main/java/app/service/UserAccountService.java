@@ -87,12 +87,27 @@ public class UserAccountService {
     }
 
     private UserDtos.TokenResponse generateToken(ObjectId id, String email, String username) {
-        var token = Jwt.issuer("https://rise-of-babylon.com")
+        var accessTokenExpiration = 3600; // 1 hour
+        var refreshTokenExpiration = 86400 * 2L; // 48 hours
+        var accessToken = Jwt.issuer("https://rise-of-babylon.com")
                 .subject(id.toString())
                 .claim("email", email)
                 .claim("username", username)
+                .claim("type", "access")
+                .expiresIn(accessTokenExpiration)
                 .sign();
-        return new UserDtos.TokenResponse(token);
+        var refreshToken = Jwt.issuer("https://rise-of-babylon.com")
+                .subject(id.toString())
+                .claim("email", email)
+                .claim("username", username)
+                .claim("type", "refresh")
+                .expiresIn(refreshTokenExpiration)
+                .sign();
+        return new UserDtos.TokenResponse(
+                accessToken,
+                refreshToken,
+                refreshTokenExpiration
+        );
     }
 
     @Transactional
@@ -151,14 +166,14 @@ public class UserAccountService {
             Log.error("Failed to publish password reset message", e);
             throw new RuntimeException("Unable to send password reset email");
         }
-        Log.infov("Password reset token published for user {0}", user.getEmail());
+        Log.infov("Password reset passwordResetToken published for user {0}", user.getEmail());
     }
 
     @Transactional
     public void completePasswordReset(PasswordResetConfirm confirm) {
-        UserAccount user = UserAccount.find("passwordResetToken", confirm.token()).firstResult();
+        UserAccount user = UserAccount.find("passwordResetToken", confirm.passwordResetToken()).firstResult();
         if (user == null) {
-            throw new NotFoundException("Invalid token");
+            throw new NotFoundException("Invalid passwordResetToken");
         }
         if (user.getPasswordResetTokenExpiresAt() == null || user.getPasswordResetTokenExpiresAt().isBefore(Instant.now())) {
             throw new BadRequestException("Token expired");
