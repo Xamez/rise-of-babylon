@@ -17,6 +17,7 @@ dependencies {
     implementation("io.quarkus:quarkus-messaging-kafka")
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-smallrye-health")
+//    implementation("io.quarkus:quarkus-observability-devservices")
     implementation("io.quarkus:quarkus-opentelemetry")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-rest")

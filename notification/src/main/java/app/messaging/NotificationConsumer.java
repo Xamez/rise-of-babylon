@@ -1,5 +1,6 @@
 package app.messaging;
 
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import jakarta.inject.Inject;
@@ -18,14 +19,16 @@ public class NotificationConsumer {
     EventBus eventBus;
 
     @Incoming("notifications-in")
-    public void onMessage(JsonObject raw) {
-        if (raw.getBoolean("broadcast", false)) {
-            eventBus.publish(BROADCAST_ADDRESS, raw);
+    public void onMessage(JsonObject notificationJson) {
+        var notification = notificationJson.mapTo(NotificationMessage.class);
+        Log.infof("Received notification of type %s (%b)", notification.type(), notification.broadcast());
+        if (notification.broadcast()) {
+            eventBus.publish(BROADCAST_ADDRESS, notification.data());
             return;
         }
-        String userId = raw.getString("userId");
+        String userId = notification.userId();
         if (userId != null && !userId.isBlank()) {
-            eventBus.publish(PERSONAL_ADDRESS_PREFIX + userId, raw);
+            eventBus.publish(PERSONAL_ADDRESS_PREFIX + userId, notification.data());
         }
     }
 }
