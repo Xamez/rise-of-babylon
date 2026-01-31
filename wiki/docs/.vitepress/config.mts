@@ -69,7 +69,7 @@ export default defineConfig({
     
     footer: {
       message: 'Wiki of Rise Of Babylon',
-      copyright: 'Copyright © 2025 Rise Of Babylon'
+      copyright: `Copyright © ${new Date().getFullYear()} Rise Of Babylon`
     }
   }
 })
