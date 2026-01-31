@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: "Sumer Wars"
+  name: "Rise Of Babylon"
   text: "Official Wiki"
   tagline: "Master the art of war in ancient Mesopotamia"
   image:
-    src: /sumer-wars-logo.png
-    alt: Sumer Wars
+    src: /sumer-wars-logo.png # TODO: update image
+    alt: Rise Of Babylon
 #  actions:
 #    - theme: brand
 #      text: 🏛️ Buildings
@@ -31,9 +31,9 @@ features:
     link: /units
 ---
 
-## 🌟 Welcome to Sumer Wars
+## 🌟 Welcome to Rise Of Babylon Wiki!
 
-**Sumer Wars** is a persistent real‑time strategy MMO that immerses you in ancient Mesopotamia. Build prosperous cities, forge mighty alliances and lead your armies to conquest in a world where rivers are the key to power.
+**Rise Of Babylon** is a persistent real‑time strategy MMO that immerses you in ancient Mesopotamia. Build prosperous cities, forge mighty alliances and lead your armies to conquest in a world where rivers are the key to power.
 
 ### 🚀 Quick Start
 

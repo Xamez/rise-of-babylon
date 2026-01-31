@@ -1,13 +1,13 @@
 import { defineConfig } from 'vitepress'
 
 const isGitHubActions = process.env.GITHUB_ACTIONS === 'true'
-const base = isGitHubActions ? '/wiki/' : '/'
+const base = isGitHubActions ? '/rise-of-babylon/' : '/'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   base,
-  title: "Sumer Wars Wiki",
-  description: "Official Wiki of the MMORTS Sumer Wars - Master the art of war in ancient Mesopotamia",
+  title: "Rise Of Babylon Wiki",
+  description: "Official Wiki of the MMORTS Rise Of Babylon - Master the art of war in ancient Mesopotamia",
   appearance: 'force-dark',
   themeConfig: {
     search: {
@@ -64,12 +64,12 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Sumer-Wars/wiki' }
+      { icon: 'github', link: 'https://github.com/Xamez/rise-of-babylon' }
     ],
     
     footer: {
-      message: 'Wiki of Sumer Wars',
-      copyright: 'Copyright © 2025 Sumer Wars'
+      message: 'Wiki of Rise Of Babylon',
+      copyright: 'Copyright © 2025 Rise Of Babylon'
     }
   }
 })

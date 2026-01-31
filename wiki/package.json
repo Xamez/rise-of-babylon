@@ -1,20 +1,23 @@
 {
-  "name": "sumer-wars-wiki",
+  "name": "rise-of-babylon-wiki",
   "version": "0.1.0",
   "private": true,
-  "description": "Official Wiki for Sumer Wars, the MMORTS set in the ancient Mesopotamian civilisation.",
+  "description": "Official Wiki for Rise Of Babylon, the MMORTS set in the ancient Mesopotamian civilisation.",
   "keywords": [
+    "rise",
+    "babylon",
     "sumer",
     "mesopotamia",
     "civilisation",
     "mmorts",
     "wiki",
-    "strategie"
+    "strategy",
+    "game"
   ],
   "author": "Max",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Xamez/sumerwars"
+    "url": "https://github.com/Xamez/rise-of-babylon"
   },
   "type": "module",
   "engines": {
