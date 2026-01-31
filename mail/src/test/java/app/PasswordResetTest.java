@@ -3,9 +3,8 @@ package app;
 import app.messaging.PasswordResetMailService;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectSpy; // Import this
-import io.smallrye.mutiny.Uni;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
@@ -18,6 +17,7 @@ import java.util.List;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @QuarkusTest
@@ -30,7 +30,7 @@ public class PasswordResetTest {
     @Inject
     MockMailbox mailbox;
 
-    @InjectSpy
+    @InjectMock
     PasswordResetMailService mailService;
 
     @BeforeEach
@@ -64,11 +64,9 @@ public class PasswordResetTest {
                 .put("username", "Mithrandir")
                 .put("token", "you-shall-not-pass-token");
 
-        doReturn(Uni.createFrom().failure(new RuntimeException("mail send failed")))
-                .when(mailService).sendResetMail(any());
+        when(mailService.sendResetMail(any())).thenThrow(new RuntimeException("mail send failed"));
 
         connector.source("password-reset").send(payload);
-
         await().untilAsserted(() -> verify(mailService, times(6)).sendResetMail(any()));
 
         assertEquals(0, mailbox.getTotalMessagesSent());

@@ -20,13 +20,14 @@ public class PasswordResetMailService {
                        \s
                         To reset your password, please click on the following link:\s
                        \s
-                        https://rise-of-babylon.com/reset-password?token=%s
+                        https://rise-of-babylon.com/reset-password?passwordResetToken=%s
                        \s
                         If you did not request a password reset, please ignore this email.
                        \s
                         Best regards,
                         The Sumer Wars Team
                        \s""".formatted(payload.username(), payload.token());
+
         Mail mail = Mail
                 .withText(payload.email(), "Password reset", text)
                 .setFrom("no-reply@rise-of-babylon.com");
@@ -36,4 +37,3 @@ public class PasswordResetMailService {
         return reactiveMailer.send(mail);
     }
 }
-
